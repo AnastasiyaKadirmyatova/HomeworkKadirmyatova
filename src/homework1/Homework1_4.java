@@ -8,11 +8,15 @@ public class Homework1_4 {
 //Создайте программу, которая округляет число n до ближайшего целого и
 //выводящую результат на экран.
 
-        double n = 1.11;
-        long intN;
+        double n = 5.89;
 
-        intN = Math.round(n);
+        int integerPart = (int)n;
+        double fractionalPart = n % 1;
 
-        System.out.println("Ближайшее целое число к n: "  + intN);
+        if (fractionalPart >= 0.5) {
+            integerPart += 1;
+        }
+
+        System.out.println("Ближайшее целое число к n: "  + integerPart);
     }
 }
