@@ -13,14 +13,22 @@ public class Homework2_5 {
          */
 
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Введите число: ");
+        System.out.println("Введите целое положительное число: ");
 
-        int n = scanner.nextInt();
-        int sum = 0;
+        if (!scanner.hasNextInt()) {
+            System.out.println("Вы ввели не число!");
+        } else {
+            int n = scanner.nextInt();
+            if (n < 0) {
+                System.out.println("Число не положительное!");
+            } else {
+                int sum = 0;
 
-        for (int i = 1; i <= n; i ++) {
-            sum += i;
+                for (int i = 1; i <= n; i++) {
+                    sum += i;
+                }
+                System.out.println("\nСумма от 1 до числа %s: %s".formatted(n, sum));
+            }
         }
-        System.out.println("\nСумма от 1 до числа %s: %s".formatted(n, sum));
     }
 }
