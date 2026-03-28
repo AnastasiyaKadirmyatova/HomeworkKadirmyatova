@@ -14,16 +14,19 @@ public class Bankomat {
     -количеством купюр каждого номинала
      */
 
-    int countTwentyBills;
-    int countFiftyBills;
-    int countHundredBills;
+    int count20Bills;
+    int count50Bills;
+    int count100Bills;
 
     boolean isSuccess = true;
     int withdrawalHundredBills = 0;
     int withdrawalFiftyBills = 0;
     int withdrawalTwentyBills = 0;
 
-    public Bankomat() {
+    public Bankomat(int count20Bills, int count50Bills, int count100Bills) {
+        this.count20Bills = count20Bills;
+        this.count50Bills = count50Bills;
+        this.count100Bills = count100Bills;
     }
 
     public void determineSuccess() {
@@ -36,34 +39,35 @@ public class Bankomat {
         }
     }
 
-    public void deposit(int sum) {
+    public boolean deposit(int sum) {
         if (sum > 0) {
-            countHundredBills += (sum / 100);
+            count100Bills += (sum / 100);
             if (sum % 100 > 0) {
                 sum = sum % 100;
-                countFiftyBills += (sum / 50);
+                count50Bills += (sum / 50);
                 if (sum % 50 > 0) {
                     sum = sum % 50;
-                    countTwentyBills += (sum / 20);
+                    count20Bills += (sum / 20);
                     if (sum % 20 > 0) {
-                        isSuccess = false;
+                        return !isSuccess;
                     }
                 }
             } else {
-                isSuccess = false;
+                return !isSuccess;
             }
         } else {
-            isSuccess = false;
+            return !isSuccess;
         }
         determineSuccess();
+        return isSuccess;
     }
 
     public void withdrawal(int sum) {
-        if (countHundredBills * 100 + countFiftyBills * 50 + countTwentyBills * 20 < sum || sum < 0) {
+        if (count100Bills * 100 + count50Bills * 50 + count20Bills * 20 < sum || sum < 0) {
             isSuccess = false;
         } else {
             withdrawalHundredBills = sum / 100;
-            countHundredBills -= withdrawalHundredBills;
+            count100Bills -= withdrawalHundredBills;
             sum -= withdrawalHundredBills * 100;
             if (sum != 0) {
                 countFiftyAndTwentyBills(sum);
@@ -77,11 +81,11 @@ public class Bankomat {
     }
 
     public void countFiftyAndTwentyBills(int sum) {
-        if (countFiftyBills * 50 + countTwentyBills * 20 < sum) {
+        if (count50Bills * 50 + count20Bills * 20 < sum) {
             isSuccess = false;
         } else {
             withdrawalFiftyBills = sum / 50;
-            countFiftyBills -= withdrawalFiftyBills;
+            count50Bills -= withdrawalFiftyBills;
             sum -= withdrawalFiftyBills * 50;
             if (sum != 0) {
                 countTwentyBills(sum);
@@ -90,11 +94,11 @@ public class Bankomat {
     }
 
     public void countTwentyBills(int sum) {
-        if (countTwentyBills * 20 < sum || sum % 20 != 0) {
+        if (count20Bills * 20 < sum || sum % 20 != 0) {
             isSuccess = false;
         } else {
             withdrawalTwentyBills = sum / 20;
-            countTwentyBills -= withdrawalTwentyBills;
+            count20Bills -= withdrawalTwentyBills;
         }
     }
 }
