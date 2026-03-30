@@ -19,86 +19,90 @@ public class Bankomat {
     int count100Bills;
 
     boolean isSuccess = true;
-    int withdrawalHundredBills = 0;
-    int withdrawalFiftyBills = 0;
-    int withdrawalTwentyBills = 0;
-
     public Bankomat(int count20Bills, int count50Bills, int count100Bills) {
         this.count20Bills = count20Bills;
         this.count50Bills = count50Bills;
         this.count100Bills = count100Bills;
     }
 
-    public void determineSuccess() {
-        if (isSuccess) {
-            System.out.println("Операция выполнена!");
-            System.out.println();
+    public boolean deposit(int sum) {
+        if (sum < 0 || sum % 10 != 0) {
+            System.out.println("Операция не может быть выполнена");
+            return false;
         } else {
-            System.out.println("Операция не может быть выполнена!");
-            System.out.println();
-        }
+            if (sum % 20 != 0 && sum > 50) {
+                count50Bills += 1;
+                sum -= 50;
+            }
+            count100Bills += (sum / 100);
+            sum = sum % 100;
+            if (sum == 0) {
+                System.out.println("Операция выполнена");
+                System.out.println("Сумма выдана: %sх100, %sх50, %sх20".formatted(count100Bills, count50Bills, count20Bills));
+                return true;
+            } else {
+                while (sum % 50 != 0) {
+                    count20Bills += 1;
+                    sum -= 20;
+                }
+                count50Bills += sum / 50;
+                }
+            System.out.println("Операция выполнена");
+            System.out.println("Сумма внесена: %sх100, %sх50, %sх20".formatted(count100Bills, count50Bills, count20Bills));
+            return true;
+            }
     }
 
-    public boolean deposit(int sum) {
-        if (sum > 0) {
-            count100Bills += (sum / 100);
-            if (sum % 100 > 0) {
-                sum = sum % 100;
-                count50Bills += (sum / 50);
-                if (sum % 50 > 0) {
-                    sum = sum % 50;
-                    count20Bills += (sum / 20);
-                    if (sum % 20 > 0) {
-                        return !isSuccess;
+    public boolean withdrawal(int sum) {
+        int withdrawal100Bills = 0;
+        int withdrawal50Bills = 0;
+        int withdrawal20Bills = 0;
+
+        if (sum < 0 || sum % 10 != 0) {
+            System.out.println("Операция не может быть выполнена");
+            return false;
+        } else {
+            if (sum % 20 != 0 && sum > 50 && count50Bills > 0) {
+                count50Bills -= 1;
+                withdrawal50Bills += 1;
+                sum -= 50;
+            }
+            if (sum / 100 > count100Bills) {
+                count100Bills -= (sum / 100);
+                withdrawal100Bills += (sum / 100);
+                sum -= 100 * count100Bills;
+            } else {
+                sum -= 100 * count100Bills;
+                withdrawal100Bills += count100Bills;
+                count100Bills = 0;
+            }
+            if (sum == 0) {
+                return true;
+            } else {
+                while (sum % 50 != 0 && count20Bills > 0) {
+                    count20Bills -= 1;
+                    withdrawal20Bills += 1;
+                    sum -= 20;
+                }
+                if (sum == 0) {
+                    System.out.println("Сумма выдана: %sх100, %sх50, %sх20".formatted(withdrawal100Bills, withdrawal50Bills, withdrawal20Bills));
+                    return true;
+                } else {
+                    if (count50Bills > sum / 50 && sum > 0) {
+                        count50Bills -= sum / 50;
+                        withdrawal50Bills += sum / 50;
+                        sum -= 50 * count50Bills;
+                    } else {
+                        sum -= 50 * count50Bills;
+                        withdrawal50Bills += count50Bills;
+                        count50Bills = 0;
                     }
                 }
-            } else {
-                return !isSuccess;
+                count20Bills -= sum / 20;
+                withdrawal20Bills += sum / 20;
+                System.out.println("Сумма выдана: %sх100, %sх50, %sх20".formatted(withdrawal100Bills, withdrawal50Bills, withdrawal20Bills));
+                return true;
             }
-        } else {
-            return !isSuccess;
-        }
-        determineSuccess();
-        return isSuccess;
-    }
-
-    public void withdrawal(int sum) {
-        if (count100Bills * 100 + count50Bills * 50 + count20Bills * 20 < sum || sum < 0) {
-            isSuccess = false;
-        } else {
-            withdrawalHundredBills = sum / 100;
-            count100Bills -= withdrawalHundredBills;
-            sum -= withdrawalHundredBills * 100;
-            if (sum != 0) {
-                countFiftyAndTwentyBills(sum);
-            }
-        }
-
-        determineSuccess();
-        if (isSuccess) {
-            System.out.println("Сумма выдана:\n%s - номинал 100\n%s - номинал 50\n%s - номинал 20".formatted(withdrawalHundredBills, withdrawalFiftyBills, withdrawalTwentyBills));
-        }
-    }
-
-    public void countFiftyAndTwentyBills(int sum) {
-        if (count50Bills * 50 + count20Bills * 20 < sum) {
-            isSuccess = false;
-        } else {
-            withdrawalFiftyBills = sum / 50;
-            count50Bills -= withdrawalFiftyBills;
-            sum -= withdrawalFiftyBills * 50;
-            if (sum != 0) {
-                countTwentyBills(sum);
-            }
-        }
-    }
-
-    public void countTwentyBills(int sum) {
-        if (count20Bills * 20 < sum || sum % 20 != 0) {
-            isSuccess = false;
-        } else {
-            withdrawalTwentyBills = sum / 20;
-            count20Bills -= withdrawalTwentyBills;
         }
     }
 }
