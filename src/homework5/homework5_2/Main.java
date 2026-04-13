@@ -10,9 +10,11 @@ public class Main {
                 new Circle(5),
                 new Triangle(3, 3, 3)
         };
+        double sumPerimeters = 0;
 
-        double sumPerimeters = figures[0].perimeter() + figures[1].perimeter() + figures[2].perimeter()
-                + figures[3].perimeter() + figures[4].perimeter();
+        for(Figures figure : figures) {
+            sumPerimeters += figure.perimeter();
+        }
         System.out.println("Сумма периметров пяти фигур: " + sumPerimeters);
     }
 }
