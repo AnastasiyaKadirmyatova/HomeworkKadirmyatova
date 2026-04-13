@@ -15,8 +15,8 @@ public class task3 {
         String secondString = scanner.nextLine();
         String thirdString = scanner.nextLine();
 
-        float avg = (firstString.length() + secondString.length() + thirdString.length()) / 3;
-        System.out.println(String.format("Средняя длина строки: %s\n", avg));
+        float avg = (firstString.length() + secondString.length() + thirdString.length()) / 3.0f;
+        System.out.println(String.format("Средняя длина строки: %.2f\n", avg));
         if (firstString.length() < avg) {
             System.out.println(firstString);
             System.out.println(String.format("Длина строки: %s\n", firstString.length()));
